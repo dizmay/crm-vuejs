@@ -1,16 +1,50 @@
 <template>
-  <form class="card auth-card">
+  <form class="card auth-card" @submit.prevent="loginHandler">
     <div class="card-content">
-      <span class="card-title">Домашняя бухгалтерия</span>
+      <span class="card-title">Вход</span>
       <div class="input-field">
-        <input id="email" type="text" class="validate" />
+        <input
+          id="email"
+          type="text"
+          v-model.trim="email"
+          :class="{
+            invalid: v$.email.$error,
+          }"
+        />
         <label for="email">Email</label>
-        <small class="helper-text invalid">Email</small>
+        <small
+          v-if="v$.email.required.$invalid && v$.email.$dirty"
+          class="helper-text invalid"
+          >Введите адрес электронной почты</small
+        >
+        <small
+          v-if="v$.email.email.$invalid && v$.email.$dirty"
+          class="helper-text invalid"
+          >Введите корректный адрес электронной почты</small
+        >
       </div>
       <div class="input-field">
-        <input id="password" type="password" class="validate" />
+        <input
+          id="password"
+          type="password"
+          v-model.trim="password"
+          :class="{
+            invalid: v$.password.$error,
+          }"
+        />
         <label for="password">Пароль</label>
-        <small class="helper-text invalid">Password</small>
+        <small
+          v-if="v$.password.required.$invalid && v$.email.$dirty"
+          class="helper-text invalid"
+          >Введите пароль</small
+        >
+        <small
+          v-else-if="v$.password.minLength.$invalid && v$.email.$dirty"
+          class="helper-text invalid"
+          >Пароль должен содержать не менее
+          {{ v$.password.minLength.$params.min }} символов. Сейчас
+          {{ password.length }}</small
+        >
       </div>
     </div>
     <div class="card-action">
@@ -23,8 +57,46 @@
 
       <p class="center">
         Нет аккаунта?
-        <a href="/">Зарегистрироваться</a>
+        <router-link to="/register">Зарегистрироваться</router-link>
       </p>
     </div>
   </form>
 </template>
+
+<script>
+import useVuelidate from "@vuelidate/core";
+import { email, required, minLength } from "@vuelidate/validators";
+export default {
+  mounted() {
+    console.log(this.v$);
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
+  name: "login",
+  data() {
+    return {
+      email: "",
+      password: "",
+    };
+  },
+  validations: {
+    email: { email, required },
+    password: { required, minLength: minLength(6) },
+  },
+  methods: {
+    loginHandler() {
+      if (this.v$.$invalid) {
+        this.v$.$touch();
+        return;
+      }
+      const loginData = {
+        email: this.email,
+        password: this.password,
+      };
+      console.log(loginData);
+      this.$router.push("/");
+    },
+  },
+};
+</script>
