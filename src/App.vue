@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import M from "materialize-css";
 import AuthLayout from "@/layouts/AuthLayout.vue";
 import MainLayout from "@/layouts/MainLayout.vue";
 
@@ -19,6 +20,9 @@ export default {
   components: {
     AuthLayout,
     MainLayout,
+  },
+  mounted() {
+    M.AutoInit();
   },
 };
 </script>

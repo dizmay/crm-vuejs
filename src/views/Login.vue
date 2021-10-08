@@ -34,12 +34,12 @@
         />
         <label for="password">Пароль</label>
         <small
-          v-if="v$.password.required.$invalid && v$.email.$dirty"
+          v-if="v$.password.required.$invalid && v$.password.$dirty"
           class="helper-text invalid"
           >Введите пароль</small
         >
         <small
-          v-else-if="v$.password.minLength.$invalid && v$.email.$dirty"
+          v-else-if="v$.password.minLength.$invalid && v$.password.$dirty"
           class="helper-text invalid"
           >Пароль должен содержать не менее
           {{ v$.password.minLength.$params.min }} символов. Сейчас
@@ -66,9 +66,12 @@
 <script>
 import useVuelidate from "@vuelidate/core";
 import { email, required, minLength } from "@vuelidate/validators";
+import messages from "@/utils/messages";
 export default {
   mounted() {
-    console.log(this.v$);
+    if (messages[this.$route.query.message]) {
+      this.$toastMessage(messages[this.$route.query.message]);
+    }
   },
   setup() {
     return { v$: useVuelidate() };
