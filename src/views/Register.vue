@@ -106,8 +106,7 @@ export default {
     agree: { sameAs: sameAs(true) },
   },
   methods: {
-    registerHandler() {
-      console.log(this.v$);
+    async registerHandler() {
       if (this.v$.$invalid) {
         this.v$.$touch();
         return;
@@ -118,8 +117,12 @@ export default {
         name: this.name,
       };
 
-      this.$router.push("/");
-      console.log(registerData);
+      try {
+        await this.$store.dispatch("register", registerData);
+        this.$router.push("/");
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };

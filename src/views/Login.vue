@@ -88,7 +88,7 @@ export default {
     password: { required, minLength: minLength(6) },
   },
   methods: {
-    loginHandler() {
+    async loginHandler() {
       if (this.v$.$invalid) {
         this.v$.$touch();
         return;
@@ -97,8 +97,13 @@ export default {
         email: this.email,
         password: this.password,
       };
-      console.log(loginData);
-      this.$router.push("/");
+
+      try {
+        await this.$store.dispatch("login", loginData);
+        this.$router.push("/");
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };
