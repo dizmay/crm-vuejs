@@ -16,7 +16,7 @@
             data-target="dropdown"
             ref="dropdown"
           >
-            USERNAME
+            {{ name }}
             <i class="material-icons right">arrow_drop_down</i>
           </a>
 
@@ -66,6 +66,9 @@ export default {
   computed: {
     formattedDate() {
       return moment(this.date).format("MMMM Do, h:mm:ss");
+    },
+    name() {
+      return this.$store.getters.userData.name;
     },
   },
   beforeUnmount() {
